@@ -65,6 +65,9 @@ registrationForm.addEventListener('submit', async (e) => {
         gender: document.getElementById('gender').value
     };
 
+    const studentIdFile = document.getElementById('studentIdProof').files[0];
+    const studentPhotoFile = document.getElementById('studentPhoto').files[0];
+
     try {
         // 1. Check if email already registered
         const alreadyRegistered = await isEmailRegistered(formData.email);
@@ -74,6 +77,31 @@ registrationForm.addEventListener('submit', async (e) => {
             resetButton();
             return;
         }
+
+        // 1.5 Upload Documents
+        submitText.textContent = "Uploading Documents...";
+
+        const uploadDoc = async (file, prefix) => {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${prefix}-${Date.now()}.${fileExt}`;
+            const { error } = await supabase.storage.from('student_documents').upload(fileName, file);
+            if (error) throw error;
+            const { data } = supabase.storage.from('student_documents').getPublicUrl(fileName);
+            return data.publicUrl;
+        };
+
+        try {
+            formData.student_id_url = await uploadDoc(studentIdFile, 'idproof');
+            formData.student_photo_url = await uploadDoc(studentPhotoFile, 'photo');
+        } catch (uploadErr) {
+            console.error("Storage upload error:", uploadErr);
+            console.error("Exact Supabase message:", uploadErr.message);
+            showToast(`Upload Failed: ${uploadErr.message || 'Unknown error. Check console.'}`, 'error');
+            resetButton();
+            return;
+        }
+
+        submitText.textContent = "Processing...";
 
         // 2. Save data to localStorage temporarily
         localStorage.setItem('dart_registration_data', JSON.stringify(formData));
@@ -92,6 +120,7 @@ function resetButton() {
     submitBtn.disabled = false;
     submitLoader.style.display = 'none';
     submitText.style.opacity = '1';
+    submitText.textContent = "Continue Registration";
 }
 
 

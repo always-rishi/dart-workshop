@@ -10,6 +10,7 @@
 
     <!-- External Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
         .payment-layout {
@@ -88,6 +89,87 @@
             margin-top: 10px;
             color: var(--accent-secondary);
             font-weight: 500;
+        }
+
+        /* ID Card Specific Styles */
+        .id-card-wrapper {
+            background: linear-gradient(135deg, #1A1A24 0%, #0A0A0E 100%);
+            border: 1px solid var(--accent-primary);
+            border-radius: 12px;
+            width: 320px;
+            margin: 0 auto 24px auto;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(74, 0, 224, 0.2);
+            position: relative;
+        }
+
+        .id-card-header {
+            background: var(--accent-primary);
+            color: white;
+            padding: 16px;
+            text-align: center;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            letter-spacing: 2px;
+            font-size: 1.2rem;
+        }
+
+        .id-card-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .student-photo-container {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-secondary);
+            overflow: hidden;
+            margin-bottom: 20px;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .student-photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .id-detail-group {
+            text-align: center;
+            margin-bottom: 12px;
+            width: 100%;
+        }
+
+        .id-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .id-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .id-card-footer {
+            background: rgba(255, 255, 255, 0.03);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: var(--accent-secondary);
         }
     </style>
 </head>
@@ -171,28 +253,52 @@
 
         <!-- Success Panel -->
         <div class="glass-panel success-view animate-fade-in" id="success-panel">
-            <div
-                style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; background: var(--success-glow); color: var(--success); margin-bottom: 24px;">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
+
+            <h2 style="margin-bottom: 8px;">Registration Verified!</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 32px;">Your official DART 2.0 ID Card is ready.</p>
+
+            <!-- Digital ID Card Container -->
+            <div id="digital-id-card" class="id-card-wrapper">
+                <div class="id-card-header">
+                    DART WORKSHOP
+                </div>
+
+                <div class="id-card-body">
+                    <div class="student-photo-container">
+                        <img id="id-card-photo" src="" alt="Student Photo">
+                    </div>
+
+                    <div class="id-detail-group">
+                        <div class="id-value" id="id-card-name"
+                            style="font-size: 1.4rem; font-family: 'Outfit'; color: var(--accent-secondary);">Name</div>
+                    </div>
+
+                    <div class="id-detail-group">
+                        <div class="id-label">College</div>
+                        <div class="id-value" id="id-card-college" style="font-size: 0.95rem;">College</div>
+                    </div>
+
+                    <div class="id-detail-group"
+                        style="display: flex; justify-content: space-between; margin-top: 12px;">
+                        <div style="text-align: left;">
+                            <div class="id-label">Roll No.</div>
+                            <div class="id-value" id="id-card-roll" style="font-size: 0.9rem;">Roll</div>
+                        </div>
+                        <div id="qrcode-container" style="background: white; padding: 4px; border-radius: 4px;">
+                            <!-- QR Code injected here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="id-card-footer">
+                    <span id="display-participant-id">DART2026-XXXX</span>
+                    <span>ATTENDEE</span>
+                </div>
             </div>
 
-            <h2>Registration Successful!</h2>
-            <p style="color: var(--text-secondary); margin-top: 8px;">Your seat has been reserved for DART 2.0</p>
-
-            <div class="participant-id-display" id="display-participant-id">
-                DART2026-XXXX
-            </div>
-
-            <div id="qrcode-container"
-                style="display: flex; justify-content: center; background: #fff; padding: 16px; border-radius: 8px; width: fit-content; margin: 0 auto;">
-            </div>
-
-            <p class="qr-instructions">
-                <strong>Important:</strong> Please download or screenshot this QR code.
-                You will need to present it at the check-in desk on the day of the workshop.
+            <p class="qr-instructions" style="max-width: 400px; margin: 0 auto 24px auto;">
+                <strong>Important:</strong> Please download this ID Card.
+                You must present this QR code at the check-in desk.
             </p>
 
             <button class="btn btn-outline" id="download-qr-btn" style="margin-top: 16px;">

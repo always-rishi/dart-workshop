@@ -3,20 +3,322 @@
 
 <head>
     <meta charset="UTF-8">
-    <!-- Immediate HTML redirect -->
-    <meta http-equiv="refresh" content="0; url=/pages/dart-registration.html" />
-    <title>Redirecting to DART Registration...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DART 2.0 | Welcome</title>
+    <link rel="stylesheet" href="./index.css">
+
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        .landing-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            max-width: 800px;
+            margin: 0 auto;
+            gap: 40px;
+            padding: 80px 20px;
+            min-height: 100vh;
+            align-content: center;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-bottom: 32px;
+        }
+
+        .action-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        @media (max-width: 768px) {
+            .action-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .action-card {
+            background: var(--bg-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            opacity: 0;
+            transition: opacity var(--transition-speed);
+        }
+
+        .action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .action-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .card-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+            flex-grow: 1;
+        }
+
+        /* ID Card Specific Styles */
+        .id-card-wrapper {
+            background: linear-gradient(135deg, #1A1A24 0%, #0A0A0E 100%);
+            border: 1px solid var(--accent-primary);
+            border-radius: 12px;
+            width: 320px;
+            margin: 0 auto 24px auto;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(74, 0, 224, 0.2);
+            position: relative;
+        }
+
+        .id-card-header {
+            background: var(--accent-primary);
+            color: white;
+            padding: 16px;
+            text-align: center;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            letter-spacing: 2px;
+            font-size: 1.2rem;
+        }
+
+        .id-card-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .student-photo-container {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-secondary);
+            overflow: hidden;
+            margin-bottom: 20px;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .student-photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .id-detail-group {
+            text-align: center;
+            margin-bottom: 12px;
+            width: 100%;
+        }
+
+        .id-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .id-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .id-card-footer {
+            background: rgba(255, 255, 255, 0.03);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: var(--accent-secondary);
+        }
+
+        #id-panel {
+            display: none;
+            margin-top: 40px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
 </head>
 
-<body style="background-color: #0A0A0E; color: white; font-family: sans-serif; text-align: center; padding-top: 50px;">
-    <h2>Starting DART Registration...</h2>
-    <p>If you are not redirected automatically, <a href="/pages/dart-registration.html" style="color: #4CAF50;">click
-            here</a>.</p>
+<body>
 
-    <!-- JavaScript fallback redirect -->
-    <script>
-        window.location.replace("/pages/dart-registration.html");
-    </script>
+    <div class="container landing-layout">
+
+        <div class="hero-section animate-fade-in">
+            <h1 class="hero-title">DART 2.0 WORKSHOP</h1>
+            <p class="hero-subtitle">The ultimate developer roadmap training experience.</p>
+        </div>
+
+        <div class="action-cards animate-fade-in" style="animation-delay: 0.1s;">
+            <!-- New Registration -->
+            <div class="action-card">
+                <div style="margin-bottom: 16px; color: var(--accent-primary);">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="8.5" cy="7" r="4"></circle>
+                        <line x1="20" y1="8" x2="20" y2="14"></line>
+                        <line x1="23" y1="11" x2="17" y2="11"></line>
+                    </svg>
+                </div>
+                <h3 class="card-title">New Participant</h3>
+                <p class="card-desc">Have not registered yet? Secure your seat and create your digital ID card now.</p>
+                <a href="./pages/dart-registration.html" class="btn btn-primary"
+                    style="text-align: center; text-decoration: none;">Register Now</a>
+            </div>
+
+            <!-- Existing User Login -->
+            <div class="action-card">
+                <div style="margin-bottom: 16px; color: var(--accent-secondary);">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </div>
+                <h3 class="card-title">Retrieve ID Card</h3>
+                <p class="card-desc">Already registered? Access your official DART digital ID card.</p>
+
+                <form id="login-form">
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <input type="email" id="loginEmail" class="form-control" placeholder="Registered Email" required
+                            style="background: rgba(0,0,0,0.2);">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <input type="text" id="loginRoll" class="form-control" placeholder="Roll Number" required
+                            style="background: rgba(0,0,0,0.2);">
+                    </div>
+                    <button type="submit" class="btn btn-outline" id="login-btn" style="width: 100%;">
+                        <div class="loader" id="login-loader"></div>
+                        <span id="login-text">View ID Card</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ID Card Display Panel (Hidden by default) -->
+        <div id="id-panel" class="glass-panel">
+            <h2 style="margin-bottom: 8px;">Welcome Back!</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 32px;">Here is your official DART 2.0 ID Card.</p>
+
+            <!-- Digital ID Card Container -->
+            <div id="digital-id-card" class="id-card-wrapper">
+                <div class="id-card-header">
+                    DART WORKSHOP
+                </div>
+
+                <div class="id-card-body">
+                    <div class="student-photo-container">
+                        <img id="id-card-photo" src="" alt="Student Photo">
+                    </div>
+
+                    <div class="id-detail-group">
+                        <div class="id-value" id="id-card-name"
+                            style="font-size: 1.4rem; font-family: 'Outfit'; color: var(--accent-secondary);">Name</div>
+                    </div>
+
+                    <div class="id-detail-group">
+                        <div class="id-label">College</div>
+                        <div class="id-value" id="id-card-college" style="font-size: 0.95rem;">College</div>
+                    </div>
+
+                    <div class="id-detail-group"
+                        style="display: flex; justify-content: space-between; margin-top: 12px;">
+                        <div style="text-align: left;">
+                            <div class="id-label">Roll No.</div>
+                            <div class="id-value" id="id-card-roll" style="font-size: 0.9rem;">Roll</div>
+                        </div>
+                        <div id="qrcode-container" style="background: white; padding: 4px; border-radius: 4px;">
+                            <!-- QR Code injected here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="id-card-footer">
+                    <span id="display-participant-id">DART2026-XXXX</span>
+                    <span id="display-payment-status" style="color: var(--success);">ATTENDEE</span>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="download-qr-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download Official ID
+            </button>
+            <br>
+            <button class="btn btn-outline" onclick="window.location.reload();"
+                style="margin-top: 16px; border: none;">Close</button>
+        </div>
+
+    </div>
+
+    <!-- Toast Notification System -->
+    <div id="toast" class="toast">
+        <span id="toast-message"></span>
+    </div>
+
+    <script type="module" src="./scripts/login.js"></script>
 </body>
 
 </html>

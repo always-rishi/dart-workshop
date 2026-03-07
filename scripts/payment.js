@@ -133,6 +133,8 @@ paymentForm.addEventListener('submit', async (e) => {
             year: registrationData.year,
             roll_number: registrationData.roll_number,
             gender: registrationData.gender,
+            student_id_url: registrationData.student_id_url,     // Pass uploaded ID URL
+            student_photo_url: registrationData.student_photo_url, // Pass uploaded Photo URL
             transaction_id: transactionIdInput,
             payment_proof_url: paymentProofUrl,
             attendance: false
@@ -144,7 +146,8 @@ paymentForm.addEventListener('submit', async (e) => {
 
         if (insertError) {
             console.error("Supabase Insert Error: ", insertError);
-            showToast('Failed to save registration. Please try again.', 'error');
+            console.error("Exact Supabase Message:", insertError.message, insertError.details);
+            showToast(`Failed to save: ${insertError.message || insertError.details || 'Unknown DB Error'}`, 'error');
             resetButton();
             return;
         }
@@ -171,42 +174,55 @@ function handleSuccessState(participantID) {
     paymentPanel.style.display = 'none';
     successPanel.style.display = 'block';
 
-    // Set Participant ID Text
-    displayParticipantId.textContent = participantID;
+    // Populate ID Card Data
+    document.getElementById('id-card-photo').src = registrationData.student_photo_url || '';
+    document.getElementById('id-card-name').textContent = registrationData.name;
+    document.getElementById('id-card-college').textContent = registrationData.college;
+    document.getElementById('id-card-roll').textContent = registrationData.roll_number;
+    document.getElementById('display-participant-id').textContent = participantID;
 
-    // Generate QR Code
+    // Generate QR Code inside card
     qrcodeContainer.innerHTML = '';
     new QRCode(qrcodeContainer, {
         text: participantID,
-        width: 200,
-        height: 200,
+        width: 80,
+        height: 80,
         colorDark: "#0A0A0E",
         colorLight: "#FFFFFF",
-        correctLevel: QRCode.CorrectLevel.H
+        correctLevel: QRCode.CorrectLevel.M
     });
 }
 
-// Handle QR Download
-downloadQrBtn.addEventListener('click', () => {
-    const canvas = qrcodeContainer.querySelector('canvas');
-    const image = qrcodeContainer.querySelector('img');
+// Handle Digital ID Card Download
+downloadQrBtn.addEventListener('click', async () => {
+    const originalText = downloadQrBtn.innerHTML;
+    downloadQrBtn.innerHTML = "Generating Image...";
+    downloadQrBtn.disabled = true;
 
-    let imageSrc = null;
+    try {
+        const idCardElement = document.getElementById('digital-id-card');
 
-    if (canvas) {
-        imageSrc = canvas.toDataURL("image/png");
-    } else if (image && image.src) {
-        imageSrc = image.src;
-    }
+        // Use html2canvas to capture the element
+        const canvas = await html2canvas(idCardElement, {
+            scale: 2, // High resolution
+            useCORS: true, // Allow loading cross-origin images (Supabase Storage)
+            backgroundColor: null // Transparent behind rounded corners
+        });
 
-    if (imageSrc) {
+        const imageSrc = canvas.toDataURL("image/png");
+
         const link = document.createElement('a');
         link.href = imageSrc;
-        link.download = `DART-Workshop-QR-${displayParticipantId.textContent}.png`;
+        link.download = `DART2026-ID-Card-${registrationData.name.replace(/\s+/g, '-')}.png`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-    } else {
-        showToast('Could not generate download. Please screenshot the QR code.', 'error');
+
+    } catch (error) {
+        console.error("Error generating ID Card Image:", error);
+        showToast('Failed to generate image. Please screenshot it instead.', 'error');
+    } finally {
+        downloadQrBtn.innerHTML = originalText;
+        downloadQrBtn.disabled = false;
     }
 });

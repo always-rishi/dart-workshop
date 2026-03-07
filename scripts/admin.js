@@ -169,11 +169,16 @@ function renderTable() {
         const statusClass = p.attendance ? 'status-present' : 'status-absent';
         const statusText = p.attendance ? 'Checked In' : 'Pending';
 
+        const idLink = p.student_id_url ? `<a href="${p.student_id_url}" target="_blank" style="color:var(--accent-primary);">View</a>` : 'N/A';
+        const photoLink = p.student_photo_url ? `<a href="${p.student_photo_url}" target="_blank" style="color:var(--accent-primary);">View</a>` : 'N/A';
+
         tr.innerHTML = `
             <td style="font-family: 'Outfit'; font-weight: 600; color: var(--text-secondary);">${p.participant_id || 'N/A'}</td>
             <td style="font-weight: 500;">${p.name || 'N/A'}</td>
             <td style="font-family: monospace;">${p.roll_number || 'N/A'}</td>
             <td>${p.gender || 'N/A'}</td>
+            <td>${idLink}</td>
+            <td>${photoLink}</td>
             <td style="font-family: monospace; color: var(--accent-secondary);">${p.transaction_id || 'N/A'}</td>
             <td>${p.college || 'N/A'}</td>
             <td>${p.phone || 'N/A'}</td>
@@ -186,7 +191,7 @@ function renderTable() {
 function exportCSV() {
     if (participantsData.length === 0) return;
 
-    const headers = ['Participant ID', 'Name', 'Roll Number', 'Gender', 'Transaction ID', 'Email', 'Phone', 'College', 'Branch', 'Year', 'Attendance', 'Check In Time', 'Registration Time'];
+    const headers = ['Participant ID', 'Name', 'Roll Number', 'Gender', 'Student ID URL', 'Photo URL', 'Transaction ID', 'Email', 'Phone', 'College', 'Branch', 'Year', 'Attendance', 'Check In Time', 'Registration Time'];
 
     const rows = participantsData.map(p => {
         return [
@@ -194,6 +199,8 @@ function exportCSV() {
             `"${p.name || ''}"`,
             `"${p.roll_number || ''}"`,
             p.gender || '',
+            `"${p.student_id_url || ''}"`,
+            `"${p.student_photo_url || ''}"`,
             `"${p.transaction_id || ''}"`,
             p.email || '',
             p.phone || '',

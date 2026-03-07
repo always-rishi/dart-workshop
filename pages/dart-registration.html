@@ -192,7 +192,24 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary" id="submit-btn" style="width: 100%; margin-top: 16px;">
+                <div class="form-group" style="margin-top: 16px;">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 12px; color: var(--accent-secondary);">Student
+                        Documents</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <label class="form-label" for="studentIdProof">Student ID Proof (Image)</label>
+                            <input type="file" id="studentIdProof" class="form-control" accept="image/*" required>
+                        </div>
+                        <div>
+                            <label class="form-label" for="studentPhoto">Student Photograph</label>
+                            <input type="file" id="studentPhoto" class="form-control" accept="image/*" required>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">These will be used to
+                        generate your Digital ID Card.</p>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submit-btn" style="width: 100%; margin-top: 24px;">
                     <div class="loader" id="submit-loader"></div>
                     <span id="submit-text">Continue Registration</span>
                 </button>
