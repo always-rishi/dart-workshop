@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment & Confirmation | DART 2.0</title>
+
+    <link rel="stylesheet" href="../index.css">
+
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        .payment-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            max-width: 600px;
+            margin: 0 auto;
+            gap: 40px;
+            padding: 60px 0;
+            min-height: 100vh;
+        }
+
+        .payment-card {
+            text-align: center;
+        }
+
+        .upi-container {
+            background: #fff;
+            padding: 24px;
+            border-radius: var(--radius-md);
+            display: inline-block;
+            margin: 24px 0;
+        }
+
+        .fee-display {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-primary);
+            font-family: 'Outfit', sans-serif;
+            margin: 16px 0;
+        }
+
+        .success-view {
+            display: none;
+            text-align: center;
+        }
+
+        .participant-id-display {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent-primary);
+            letter-spacing: 2px;
+            margin: 20px 0;
+            padding: 16px;
+            background: rgba(74, 0, 224, 0.1);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--accent-glow);
+        }
+
+        .qr-instructions {
+            color: var(--text-secondary);
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+
+        .upload-field {
+            border: 2px dashed var(--border-color);
+            padding: 24px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            cursor: pointer;
+            transition: border-color var(--transition-speed);
+        }
+
+        .upload-field:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .upload-field input {
+            display: none;
+        }
+
+        #file-name-display {
+            display: block;
+            margin-top: 10px;
+            color: var(--accent-secondary);
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container payment-layout">
+
+        <!-- Payment Panel -->
+        <div class="glass-panel form-panel animate-fade-in" id="payment-panel">
+            <h2 style="font-size: 2rem; text-align: center;">Complete Payment</h2>
+
+            <div class="payment-card">
+                <p style="color: var(--text-secondary); margin-top: 8px;">Workshop Registration Fee</p>
+                <div class="fee-display">₹500</div>
+
+                <div class="upi-container">
+                    <!-- Placeholder QR (simulate real UPI QR) -->
+                    <svg width="150" height="150" viewBox="0 0 100 100" style="background:#000;">
+                        <rect x="10" y="10" width="30" height="30" fill="none" stroke="#fff" stroke-width="4" />
+                        <rect x="15" y="15" width="20" height="20" fill="#fff" />
+                        <rect x="60" y="10" width="30" height="30" fill="none" stroke="#fff" stroke-width="4" />
+                        <rect x="65" y="15" width="20" height="20" fill="#fff" />
+                        <rect x="10" y="60" width="30" height="30" fill="none" stroke="#fff" stroke-width="4" />
+                        <rect x="15" y="65" width="20" height="20" fill="#fff" />
+                        <rect x="60" y="60" width="10" height="10" fill="#fff" />
+                        <rect x="75" y="60" width="15" height="15" fill="#fff" />
+                        <rect x="60" y="75" width="15" height="15" fill="#fff" />
+                        <rect x="80" y="80" width="10" height="10" fill="#fff" />
+                        <rect x="45" y="45" width="10" height="10" fill="#fff" />
+                    </svg>
+                    <p style="color: #000; font-weight: 600; margin-top: 12px;">UPI: dartworkshop@upi</p>
+                </div>
+            </div>
+
+            <form id="payment-form" style="margin-top: 24px;">
+                <div class="form-group">
+                    <label class="form-label" for="transactionId">Transaction ID / UTR Number</label>
+                    <input type="text" id="transactionId" class="form-control" placeholder="12 digit UPI Ref No."
+                        required>
+                    <small style="color: var(--text-secondary); display: block; margin-top: 8px;">Must be between 8-30
+                        alphanumeric characters.</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Upload Payment Screenshot</label>
+                    <label class="upload-field" for="paymentProof" id="upload-label">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="margin-bottom: 8px; color: var(--accent-primary);">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <br>
+                        Click to upload screenshot (JPG/PNG)
+                        <input type="file" id="paymentProof" accept="image/png, image/jpeg" required>
+                    </label>
+                    <span id="file-name-display"></span>
+                </div>
+
+                <div
+                    style="background: rgba(239, 68, 68, 0.1); border: 1px solid var(--error); padding: 12px; border-radius: var(--radius-sm); margin: 24px 0;">
+                    <p style="color: var(--error); font-weight: 500; font-size: 0.9rem;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        ⚠ Please bring the same payment screenshot during the workshop for verification.
+                    </p>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="confirm-btn" style="width: 100%;">
+                    <div class="loader" id="confirm-loader"></div>
+                    <span id="confirm-text">Confirm Payment & Register</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Success Panel -->
+        <div class="glass-panel success-view animate-fade-in" id="success-panel">
+            <div
+                style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; background: var(--success-glow); color: var(--success); margin-bottom: 24px;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+
+            <h2>Registration Successful!</h2>
+            <p style="color: var(--text-secondary); margin-top: 8px;">Your seat has been reserved for DART 2.0</p>
+
+            <div class="participant-id-display" id="display-participant-id">
+                DART2026-XXXX
+            </div>
+
+            <div id="qrcode-container"
+                style="display: flex; justify-content: center; background: #fff; padding: 16px; border-radius: 8px; width: fit-content; margin: 0 auto;">
+            </div>
+
+            <p class="qr-instructions">
+                <strong>Important:</strong> Please download or screenshot this QR code.
+                You will need to present it at the check-in desk on the day of the workshop.
+            </p>
+
+            <button class="btn btn-outline" id="download-qr-btn" style="margin-top: 16px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download QR Code
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Toast Notification System -->
+    <div id="toast" class="toast">
+        <span id="toast-message"></span>
+    </div>
+
+    <script type="module" src="../scripts/payment.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,217 @@
+// scripts/admin.js
+import { supabase } from './supabase-config.js';
+
+// Determine which page we are on
+const isLoginPage = window.location.pathname.includes('login.html');
+const isDashboard = window.location.pathname.includes('dashboard.html');
+
+// State
+let participantsData = [];
+
+// ============================================
+// AUTHENTICATION LOGIC (LocalStorage)
+// ============================================
+
+const checkAuth = () => {
+    const isAuthenticated = localStorage.getItem('dart_admin_auth') === 'true';
+
+    if (isAuthenticated) {
+        if (isLoginPage) {
+            window.location.href = 'dashboard.html';
+        } else if (isDashboard) {
+            document.getElementById('auth-loading').style.display = 'none';
+            document.getElementById('dashboard-content').style.display = 'block';
+            initDashboard();
+        }
+    } else {
+        if (!isLoginPage) {
+            window.location.href = 'login.html';
+        }
+    }
+};
+
+// Initial Auth Check
+checkAuth();
+
+if (isLoginPage) {
+    const loginForm = document.getElementById('login-form');
+    const loginError = document.getElementById('login-error');
+    const loginBtn = document.getElementById('login-btn');
+    const loginLoader = document.getElementById('login-loader');
+    const loginText = document.getElementById('login-text');
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        loginBtn.disabled = true;
+        loginLoader.style.display = 'block';
+        loginText.style.opacity = '0.7';
+        loginError.style.display = 'none';
+
+        // Hardcoded Simple Admin Auth
+        const ADMIN_EMAIL = 'admin@dart.com';
+        const ADMIN_PASSWORD = 'password123';
+
+        // Simulate network delay
+        setTimeout(() => {
+            if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+                localStorage.setItem('dart_admin_auth', 'true');
+                window.location.href = 'dashboard.html';
+            } else {
+                loginError.style.display = 'block';
+                loginBtn.disabled = false;
+                loginLoader.style.display = 'none';
+                loginText.style.opacity = '1';
+            }
+        }, 800);
+    });
+}
+
+// ============================================
+// DASHBOARD LOGIC
+// ============================================
+
+function initDashboard() {
+    // UI Elements
+    const statTotal = document.getElementById('stat-total');
+    const statAttendees = document.getElementById('stat-attendees');
+    const statRemaining = document.getElementById('stat-remaining');
+    const searchInput = document.getElementById('search-input');
+    const filterAttendance = document.getElementById('filter-attendance');
+    const exportCsvBtn = document.getElementById('export-csv-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    async function fetchParticipants() {
+        try {
+            const { data, error } = await supabase
+                .from('participant')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+
+            participantsData = data || [];
+            updateDashboardMetrics();
+            renderTable();
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            // Show toast or error empty state if needed
+        }
+    }
+
+    function updateDashboardMetrics() {
+        let checkedInCount = 0;
+
+        participantsData.forEach(p => {
+            if (p.attendance) {
+                checkedInCount++;
+            }
+        });
+
+        // Update Stats
+        const total = participantsData.length;
+        statTotal.textContent = total;
+        statAttendees.textContent = checkedInCount;
+        statRemaining.textContent = total - checkedInCount;
+    }
+
+    // Initial Fetch
+    fetchParticipants();
+
+    // Event Listeners for Filtering
+    searchInput.addEventListener('input', renderTable);
+    filterAttendance.addEventListener('change', renderTable);
+
+    // Export CSV
+    exportCsvBtn.addEventListener('click', exportCSV);
+
+    // Logout
+    logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('dart_admin_auth');
+        window.location.href = 'login.html';
+    });
+}
+
+function renderTable() {
+    const tbody = document.getElementById('table-body');
+    const searchInput = document.getElementById('search-input').value.toLowerCase();
+    const filterAttendance = document.getElementById('filter-attendance').value;
+
+    tbody.innerHTML = '';
+
+    let filteredData = participantsData.filter(p => {
+        // Search Filter
+        const searchMatches =
+            (p.name && p.name.toLowerCase().includes(searchInput)) ||
+            (p.participant_id && p.participant_id.toLowerCase().includes(searchInput)) ||
+            (p.email && p.email.toLowerCase().includes(searchInput));
+
+        // Attendance Filter
+        let attendanceMatches = true;
+        if (filterAttendance === 'present') attendanceMatches = p.attendance === true;
+        if (filterAttendance === 'absent') attendanceMatches = p.attendance === false;
+
+        return searchMatches && attendanceMatches;
+    });
+
+    if (filteredData.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 32px 0;">No participants found matching criteria.</td></tr>`;
+        return;
+    }
+
+    filteredData.forEach(p => {
+        const tr = document.createElement('tr');
+
+        // Color Indication for Attendance
+        const statusClass = p.attendance ? 'status-present' : 'status-absent';
+        const statusText = p.attendance ? 'Checked In' : 'Pending';
+
+        tr.innerHTML = `
+            <td style="font-family: 'Outfit'; font-weight: 600; color: var(--text-secondary);">${p.participant_id || 'N/A'}</td>
+            <td style="font-weight: 500;">${p.name || 'N/A'}</td>
+            <td style="font-family: monospace;">${p.roll_number || 'N/A'}</td>
+            <td>${p.gender || 'N/A'}</td>
+            <td style="font-family: monospace; color: var(--accent-secondary);">${p.transaction_id || 'N/A'}</td>
+            <td>${p.college || 'N/A'}</td>
+            <td>${p.phone || 'N/A'}</td>
+            <td class="${statusClass}">${statusText}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function exportCSV() {
+    if (participantsData.length === 0) return;
+
+    const headers = ['Participant ID', 'Name', 'Roll Number', 'Gender', 'Transaction ID', 'Email', 'Phone', 'College', 'Branch', 'Year', 'Attendance', 'Check In Time', 'Registration Time'];
+
+    const rows = participantsData.map(p => {
+        return [
+            p.participant_id || '',
+            `"${p.name || ''}"`,
+            `"${p.roll_number || ''}"`,
+            p.gender || '',
+            `"${p.transaction_id || ''}"`,
+            p.email || '',
+            p.phone || '',
+            `"${p.college || ''}"`,
+            `"${p.branch || ''}"`,
+            p.year || '',
+            p.attendance ? 'Checked In' : 'Pending',
+            p.check_in_time ? new Date(p.check_in_time).toLocaleString() : '',
+            p.created_at ? new Date(p.created_at).toLocaleString() : ''
+        ].join(',');
+    });
+
+    const csvContent = "data:text/csv;charset=utf-8," + headers.join(',') + "\n" + rows.join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `DART_Workshop_Attendees_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}

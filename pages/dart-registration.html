@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DART 2.0 Workshop Registration</title>
+    <meta name="description"
+        content="Register for the DART 2.0 technical workshop. Join us for an immersive learning experience.">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../index.css">
+
+    <!-- External Libraries -->
+    <!-- QR Code generation moved to payment.html -->
+
+    <!-- Custom Style specific to this page -->
+    <style>
+        .registration-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 40px;
+            align-items: start;
+            padding: 60px 0;
+            min-height: 100vh;
+        }
+
+        .hero-section {
+            position: sticky;
+            top: 40px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 24px;
+        }
+
+        .event-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .detail-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: var(--radius-md);
+        }
+
+        .detail-card h3 {
+            color: var(--accent-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .detail-card p {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .success-view {
+            display: none;
+            text-align: center;
+        }
+
+        .participant-id-display {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent-primary);
+            letter-spacing: 2px;
+            margin: 20px 0;
+            padding: 16px;
+            background: rgba(74, 0, 224, 0.1);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--accent-glow);
+        }
+
+        .qr-instructions {
+            color: var(--text-secondary);
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 992px) {
+            .registration-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-section {
+                position: relative;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container registration-layout">
+
+        <!-- Hero & Context Section -->
+        <div class="hero-section animate-fade-in">
+            <h1 class="hero-title">
+                Welcome to <br>
+                <span class="text-gradient">DART 2.0</span> Workshop
+            </h1>
+            <p style="font-size: 1.2rem; color: var(--text-secondary); max-width: 500px;">
+                Dive deep into the next generation of application development. Reserved solely for developers ready to
+                build the future. Secure your spot now.
+            </p>
+
+            <div class="event-details">
+                <div class="detail-card">
+                    <h3>Date</h3>
+                    <p>October 15, 2026</p>
+                </div>
+                <div class="detail-card">
+                    <h3>Time</h3>
+                    <p>09:00 AM - 05:00 PM</p>
+                </div>
+                <div class="detail-card" style="grid-column: 1 / -1;">
+                    <h3>Venue</h3>
+                    <p>Tech Innovation Hub, Main Auditorium</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Form Panel -->
+        <div class="glass-panel form-panel animate-fade-in" style="animation-delay: 0.2s;" id="registration-panel">
+            <h2 style="margin-bottom: 32px; font-size: 2rem;">Register Now</h2>
+
+            <form id="registration-form">
+                <div class="form-group">
+                    <label class="form-label" for="fullName">Full Name</label>
+                    <input type="text" id="fullName" class="form-control" placeholder="John Doe" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input type="email" id="email" class="form-control" placeholder="john@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="phone">Phone Number</label>
+                        <input type="tel" id="phone" class="form-control" placeholder="+1234567890" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="college">College / Organization</label>
+                    <input type="text" id="college" class="form-control" placeholder="University of Technology"
+                        required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label class="form-label" for="branch">Branch / Department</label>
+                        <input type="text" id="branch" class="form-control" placeholder="Computer Science" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="year">Year of Study</label>
+                        <select id="year" class="form-control" required>
+                            <option value="" disabled selected>Select Year</option>
+                            <option value="1">1st Year</option>
+                            <option value="2">2nd Year</option>
+                            <option value="3">3rd Year</option>
+                            <option value="4">4th Year</option>
+                            <option value="Professional">Professional</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label class="form-label" for="rollNumber">System ID / Roll Number</label>
+                        <input type="text" id="rollNumber" class="form-control" placeholder="2024....." required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="gender">Gender</label>
+                        <select id="gender" class="form-control" required>
+                            <option value="" disabled selected>Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                            <option value="Prefer Not to Say">Prefer Not to Say</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submit-btn" style="width: 100%; margin-top: 16px;">
+                    <div class="loader" id="submit-loader"></div>
+                    <span id="submit-text">Continue Registration</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Success panel moved to payment.html -->
+
+    </div>
+
+    <!-- Toast Notification System -->
+    <div id="toast" class="toast">
+        <span id="toast-message"></span>
+    </div>
+
+    <!-- Registration Logic -->
+    <script type="module" src="../scripts/registration.js"></script>
+</body>
+
+</html>

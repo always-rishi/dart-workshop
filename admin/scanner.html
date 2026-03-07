@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Scanner | Admin | DART Workshop</title>
+    <link rel="stylesheet" href="../index.css">
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        .scanner-layout {
+            max-width: 800px;
+            margin: 40px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .screen-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #reader {
+            width: 100%;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+            background: #000;
+        }
+
+        /* html5-qrcode overrides to look better on dark mode */
+        #reader button {
+            background-color: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            margin: 4px;
+        }
+
+        #reader a {
+            color: var(--accent-secondary);
+        }
+
+        .scan-result-card {
+            display: none;
+            text-align: center;
+        }
+
+        .result-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .result-success {
+            background: var(--success-glow);
+            color: var(--success);
+        }
+
+        .result-warning {
+            background: var(--warning);
+            color: #fff;
+        }
+
+        .result-error {
+            background: var(--error-glow);
+            color: var(--error);
+        }
+
+        .participant-details {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            text-align: left;
+        }
+
+        .detail-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px;
+            border-radius: var(--radius-sm);
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .scanner-content {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Loading Overlay -->
+    <div id="auth-loading" style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <div class="loader" style="display: block; width: 40px; height: 40px;"></div>
+    </div>
+
+    <div class="container scanner-layout scanner-content animate-fade-in" id="scanner-content">
+        <header class="screen-header">
+            <div>
+                <h1>QR <span class="text-gradient">Scanner</span></h1>
+                <p style="color: var(--text-secondary);">Check in participants instantly</p>
+            </div>
+            <a href="dashboard.html" class="btn btn-outline">Back to Dashboard</a>
+        </header>
+
+        <div style="display: grid; grid-template-columns: 1fr; gap: 24px;">
+            <!-- Camera View -->
+            <div class="glass-panel" style="padding: 16px;">
+                <div id="reader"></div>
+            </div>
+
+            <!-- Result View -->
+            <div class="glass-panel scan-result-card" id="scan-result-card">
+                <div class="result-icon" id="result-icon">
+                    <!-- Icon SVG injected by JS -->
+                </div>
+
+                <h2 id="result-title">Ready to Scan</h2>
+                <p id="result-message" style="color: var(--text-secondary); margin-top: 8px;">Point camera at QR code
+                </p>
+
+                <div class="participant-details" id="participant-details" style="display: none;">
+                    <div class="detail-item" style="grid-column: 1 / -1;">
+                        <div class="detail-label">Name</div>
+                        <div class="detail-value" id="res-name">--</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Participant ID</div>
+                        <div class="detail-value" id="res-id">--</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">College</div>
+                        <div class="detail-value" id="res-college">--</div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" id="continue-scan-btn"
+                    style="display: none; margin-top: 24px; width: 100%;">
+                    Continue Scanning
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast">
+        <span id="toast-message"></span>
+    </div>
+
+    <!-- Scanner Logic -->
+    <script type="module" src="../scripts/scanner.js"></script>
+</body>
+
+</html>

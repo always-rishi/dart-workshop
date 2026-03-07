@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | DART Workshop</title>
+    <link rel="stylesheet" href="../index.css">
+    <style>
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 32px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 8px 0;
+            background: linear-gradient(135deg, #fff, #94A3B8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .table-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .search-input {
+            width: 300px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.05);
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Color indicators for attendance */
+        .status-present {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .status-absent {
+            color: var(--error);
+            font-weight: 600;
+        }
+
+        .skeleton-row {
+            height: 50px;
+            background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--bg-secondary) 50%, var(--bg-tertiary) 75%);
+            background-size: 200% 100%;
+            animation: skeletonLoading 1.5s infinite;
+        }
+
+        @keyframes skeletonLoading {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .dashboard-content {
+            display: none;
+        }
+
+        /* Hidden until auth is confirmed */
+    </style>
+</head>
+
+<body>
+
+    <!-- Loading Overlay -->
+    <div id="auth-loading" style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <div class="loader" style="display: block; width: 40px; height: 40px;"></div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div class="container dashboard-content animate-fade-in" id="dashboard-content">
+        <header class="dashboard-header">
+            <div>
+                <h1 style="font-size: 1.8rem;">Admin <span class="text-gradient">Dashboard</span></h1>
+                <p style="color: var(--text-secondary);">Manage attendees and check-in</p>
+            </div>
+            <div style="display: flex; gap: 16px;">
+                <a href="scanner.html" class="btn btn-primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                        <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                        <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                        <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                        <rect x="7" y="7" width="10" height="10" rx="1" ry="1"></rect>
+                    </svg>
+                    Open Scanner
+                </a>
+                <button class="btn btn-outline" id="logout-btn">Logout</button>
+            </div>
+        </header>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Registrations</div>
+                <div class="stat-value" id="stat-total">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Checked In</div>
+                <div class="stat-value" id="stat-attendees"
+                    style="background: linear-gradient(135deg, var(--success), #A5D6A7); -webkit-background-clip: text;">
+                    0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Remaining Required</div>
+                <div class="stat-value" id="stat-remaining">0</div>
+            </div>
+        </section>
+
+        <section class="glass-panel" style="padding: 24px;">
+            <div class="table-controls">
+                <input type="text" id="search-input" class="form-control search-input"
+                    placeholder="Search by name, ID, or email...">
+
+                <div style="display: flex; gap: 12px;">
+                    <select id="filter-attendance" class="form-control" style="width: auto;">
+                        <option value="all">All Attendees</option>
+                        <option value="present">Checked In</option>
+                        <option value="absent">Not Checked In</option>
+                    </select>
+                    <button class="btn btn-outline" id="export-csv-btn">
+                        Export CSV
+                    </button>
+                </div>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table id="participants-table">
+                    <thead>
+                        <tr>
+                            <th>Participant ID</th>
+                            <th>Name</th>
+                            <th>Roll Number</th>
+                            <th>Gender</th>
+                            <th>Transaction ID</th>
+                            <th>College</th>
+                            <th>Phone</th>
+                            <th>Attendance</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Skeleton rows -->
+                        <tr>
+                            <td colspan="8">
+                                <div class="skeleton-row"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="8">
+                                <div class="skeleton-row"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="8">
+                                <div class="skeleton-row"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script type="module" src="../scripts/admin.js"></script>
+</body>
+
+</html>
