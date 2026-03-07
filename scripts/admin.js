@@ -172,6 +172,10 @@ function renderTable() {
         const idLink = p.student_id_url ? `<a href="${p.student_id_url}" target="_blank" style="color:var(--accent-primary);">View</a>` : 'N/A';
         const photoLink = p.student_photo_url ? `<a href="${p.student_photo_url}" target="_blank" style="color:var(--accent-primary);">View</a>` : 'N/A';
 
+        const verifiedClass = p.verified ? 'status-present' : 'status-absent';
+        const verifiedAction = p.verified ? 'Revoke' : 'Verify';
+        const toggleBtnClass = p.verified ? 'btn-outline' : 'btn-primary';
+
         tr.innerHTML = `
             <td style="font-family: 'Outfit'; font-weight: 600; color: var(--text-secondary);">${p.participant_id || 'N/A'}</td>
             <td style="font-weight: 500;">${p.name || 'N/A'}</td>
@@ -182,6 +186,11 @@ function renderTable() {
             <td style="font-family: monospace; color: var(--accent-secondary);">${p.transaction_id || 'N/A'}</td>
             <td>${p.college || 'N/A'}</td>
             <td>${p.phone || 'N/A'}</td>
+            <td>
+                <button class="btn ${toggleBtnClass}" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px;" onclick="window.toggleVerification('${p.participant_id}', ${p.verified === true})">
+                    ${verifiedAction}
+                </button>
+            </td>
             <td class="${statusClass}">${statusText}</td>
         `;
         tbody.appendChild(tr);
@@ -191,7 +200,7 @@ function renderTable() {
 function exportCSV() {
     if (participantsData.length === 0) return;
 
-    const headers = ['Participant ID', 'Name', 'Roll Number', 'Gender', 'Student ID URL', 'Photo URL', 'Transaction ID', 'Email', 'Phone', 'College', 'Branch', 'Year', 'Attendance', 'Check In Time', 'Registration Time'];
+    const headers = ['Participant ID', 'Name', 'Roll Number', 'Gender', 'Student ID URL', 'Photo URL', 'Transaction ID', 'Email', 'Phone', 'College', 'Branch', 'Year', 'Verified', 'Attendance', 'Check In Time', 'Registration Time'];
 
     const rows = participantsData.map(p => {
         return [
@@ -207,6 +216,7 @@ function exportCSV() {
             `"${p.college || ''}"`,
             `"${p.branch || ''}"`,
             p.year || '',
+            p.verified ? 'Yes' : 'No',
             p.attendance ? 'Checked In' : 'Pending',
             p.check_in_time ? new Date(p.check_in_time).toLocaleString() : '',
             p.created_at ? new Date(p.created_at).toLocaleString() : ''
@@ -222,3 +232,30 @@ function exportCSV() {
     link.click();
     document.body.removeChild(link);
 }
+
+// Global scope expose for the inline onclick handler
+window.toggleVerification = async (participantId, currentStatus) => {
+    // Force boolean type in case it was passed loosely
+    const isCurrentlyVerified = currentStatus === true || currentStatus === 'true';
+    const newStatus = !isCurrentlyVerified;
+
+    try {
+        const { error } = await supabase
+            .from('participant')
+            .update({ verified: newStatus })
+            .eq('participant_id', participantId);
+
+        if (error) throw error;
+
+        // Find the index and update the local state immediately
+        const index = participantsData.findIndex(p => p.participant_id === participantId);
+        if (index !== -1) {
+            participantsData[index].verified = newStatus;
+            renderTable(); // Re-render table with new state
+        }
+
+    } catch (err) {
+        console.error('Failed to update verification status:', err);
+        alert('Failed to update verification status. Check console for details.');
+    }
+};

@@ -194,10 +194,76 @@
             text-align: center;
             animation: fadeIn 0.5s ease-out;
         }
+
+        .top-right-actions {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .top-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all var(--transition-speed);
+        }
+
+        .top-action-btn:hover {
+            background: rgba(74, 0, 224, 0.1);
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .top-right-actions {
+                top: 16px;
+                right: 16px;
+            }
+
+            .top-action-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+                gap: 4px;
+            }
+        }
     </style>
 </head>
 
 <body>
+
+    <!-- Top Right Actions -->
+    <div class="top-right-actions animate-fade-in">
+        <a href="./admin/scanner.html" class="top-action-btn" title="QR Scanner">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            Scanner
+        </a>
+        <a href="./admin/login.html" class="top-action-btn" title="Access Admin Login">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            Admin Login
+        </a>
+    </div>
 
     <div class="container landing-layout">
 

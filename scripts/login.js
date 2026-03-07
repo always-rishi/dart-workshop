@@ -86,14 +86,30 @@ function renderIDCard(p) {
 
     // Generate QR Code inside card
     qrcodeContainer.innerHTML = '';
-    new QRCode(qrcodeContainer, {
-        text: p.participant_id,
-        width: 80,
-        height: 80,
-        colorDark: "#0A0A0E",
-        colorLight: "#FFFFFF",
-        correctLevel: QRCode.CorrectLevel.M
-    });
+
+    if (p.verified) {
+        qrcodeContainer.style.display = 'block';
+        qrcodeContainer.style.width = 'auto';
+        qrcodeContainer.style.height = 'auto';
+        new QRCode(qrcodeContainer, {
+            text: p.participant_id,
+            width: 80,
+            height: 80,
+            colorDark: "#0A0A0E",
+            colorLight: "#FFFFFF",
+            correctLevel: QRCode.CorrectLevel.M
+        });
+    } else {
+        qrcodeContainer.style.display = 'flex';
+        qrcodeContainer.style.alignItems = 'center';
+        qrcodeContainer.style.justifyContent = 'center';
+        qrcodeContainer.style.textAlign = 'center';
+        qrcodeContainer.style.width = '80px';
+        qrcodeContainer.style.height = '80px';
+        qrcodeContainer.style.fontSize = '0.75rem';
+        qrcodeContainer.style.color = 'var(--text-secondary)';
+        qrcodeContainer.innerHTML = 'Pending verification';
+    }
 }
 
 // Handle Digital ID Card Download using html2canvas
