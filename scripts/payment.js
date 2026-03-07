@@ -178,6 +178,8 @@ function handleSuccessState(participantID) {
     document.getElementById('id-card-photo').src = registrationData.student_photo_url || '';
     document.getElementById('id-card-name').textContent = registrationData.name;
     document.getElementById('id-card-college').textContent = registrationData.college;
+    document.getElementById('id-card-branch').textContent = registrationData.branch;
+    document.getElementById('id-card-year').textContent = registrationData.year;
     document.getElementById('id-card-roll').textContent = registrationData.roll_number;
     document.getElementById('display-participant-id').textContent = participantID;
 

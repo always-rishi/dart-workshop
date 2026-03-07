@@ -79,6 +79,8 @@ function renderIDCard(p) {
     document.getElementById('id-card-photo').src = p.student_photo_url || '';
     document.getElementById('id-card-name').textContent = p.name;
     document.getElementById('id-card-college').textContent = p.college;
+    document.getElementById('id-card-branch').textContent = p.branch;
+    document.getElementById('id-card-year').textContent = p.year;
     document.getElementById('id-card-roll').textContent = p.roll_number;
     document.getElementById('display-participant-id').textContent = p.participant_id;
 
