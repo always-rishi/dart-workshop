@@ -23,6 +23,69 @@
             align-content: center;
         }
 
+        .stats-sidebar {
+            position: absolute;
+            top: 80px;
+            right: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 250px;
+            z-index: 90;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            text-align: center;
+            transition: transform var(--transition-speed), border-color var(--transition-speed);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            margin-bottom: 4px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 1400px) {
+            .stats-sidebar {
+                position: relative;
+                top: 0;
+                right: 0;
+                width: 100%;
+                flex-direction: row;
+                justify-content: center;
+                flex-wrap: wrap;
+                margin-top: 20px;
+            }
+            .stat-card {
+                flex: 1;
+                min-width: 150px;
+            }
+        }
+
         .hero-section {
             text-align: center;
             margin-bottom: 24px;
@@ -410,6 +473,21 @@
                 style="margin-top: 16px; border: none;">Close</button>
         </div>
 
+        <div class="stats-sidebar animate-fade-in" style="animation-delay: 0.2s;">
+            <div class="stat-card">
+                <div class="stat-value" id="stat-total-seats">...</div>
+                <div class="stat-label">Total Seats</div>
+            </div>
+            <div class="stat-card" style="border-color: rgba(74, 0, 224, 0.3);">
+                <div class="stat-value" id="stat-kit-seats" style="background: linear-gradient(135deg, #4A00E0 0%, #8E2DE2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">...</div>
+                <div class="stat-label" style="color: #8E2DE2;">With Kit (Filled/50)</div>
+            </div>
+            <div class="stat-card" style="border-color: rgba(0, 255, 136, 0.3);">
+                <div class="stat-value" id="stat-nokit-seats" style="background: var(--success); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">...</div>
+                <div class="stat-label" style="color: var(--success);">Without Kit (Filled/50)</div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Toast Notification System -->
@@ -418,6 +496,7 @@
     </div>
 
     <script type="module" src="./scripts/login.js"></script>
+    <script type="module" src="./scripts/home-stats.js"></script>
 </body>
 
 </html>

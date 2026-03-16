@@ -181,9 +181,9 @@ function renderTable() {
             <td style="font-weight: 500;">${p.name || 'N/A'}</td>
             <td style="font-family: monospace;">${p.roll_number || 'N/A'}</td>
             <td>${p.gender || 'N/A'}</td>
+            <td style="color: var(--accent-secondary); font-weight: 500;">${p.kit_selection || 'N/A'}</td>
             <td>${idLink}</td>
             <td>${photoLink}</td>
-            <td style="font-family: monospace; color: var(--accent-secondary);">${p.transaction_id || 'N/A'}</td>
             <td>${p.college || 'N/A'}</td>
             <td>${p.phone || 'N/A'}</td>
             <td>
@@ -200,7 +200,7 @@ function renderTable() {
 function exportCSV() {
     if (participantsData.length === 0) return;
 
-    const headers = ['Participant ID', 'Name', 'Roll Number', 'Gender', 'Student ID URL', 'Photo URL', 'Transaction ID', 'Email', 'Phone', 'College', 'Branch', 'Year', 'Verified', 'Attendance', 'Check In Time', 'Registration Time'];
+    const headers = ['Participant ID', 'Name', 'Roll Number', 'Gender', 'Kit Selection', 'Student ID URL', 'Photo URL', 'Email', 'Phone', 'College', 'Branch', 'Year', 'Verified', 'Attendance', 'Check In Time', 'Registration Time'];
 
     const rows = participantsData.map(p => {
         return [
@@ -208,9 +208,9 @@ function exportCSV() {
             `"${p.name || ''}"`,
             `"${p.roll_number || ''}"`,
             p.gender || '',
+            `"${p.kit_selection || ''}"`,
             `"${p.student_id_url || ''}"`,
             `"${p.student_photo_url || ''}"`,
-            `"${p.transaction_id || ''}"`,
             p.email || '',
             p.phone || '',
             `"${p.college || ''}"`,

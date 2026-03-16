@@ -62,7 +62,8 @@ registrationForm.addEventListener('submit', async (e) => {
         branch: document.getElementById('branch').value.trim(),
         year: document.getElementById('year').value,
         roll_number: document.getElementById('rollNumber').value.trim(),
-        gender: document.getElementById('gender').value
+        gender: document.getElementById('gender').value,
+        kit_selection: document.getElementById('registrationMode').value
     };
 
     const studentIdFile = document.getElementById('studentIdProof').files[0];

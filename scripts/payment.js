@@ -47,6 +47,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     registrationData = JSON.parse(storedData);
+    
+    // Set dynamic fee based on Kit Selection
+    const dynamicFeeEl = document.getElementById('dynamic-fee');
+    if (registrationData.kit_selection === 'Without Kit') {
+        dynamicFeeEl.textContent = '₹500';
+    } else {
+        dynamicFeeEl.textContent = '₹1800';
+    }
 });
 
 // Update File Name Display UX
@@ -133,6 +141,7 @@ paymentForm.addEventListener('submit', async (e) => {
             year: registrationData.year,
             roll_number: registrationData.roll_number,
             gender: registrationData.gender,
+            kit_selection: registrationData.kit_selection,
             student_id_url: registrationData.student_id_url,     // Pass uploaded ID URL
             student_photo_url: registrationData.student_photo_url, // Pass uploaded Photo URL
             transaction_id: transactionIdInput,
