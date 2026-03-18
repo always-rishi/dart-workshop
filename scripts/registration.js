@@ -124,4 +124,31 @@ function resetButton() {
     submitText.textContent = "Continue Registration";
 }
 
+// Seat Capacity Lockdown
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const { count, error } = await supabase
+            .from('participant')
+            .select('*', { count: 'exact', head: true })
+            .eq('kit_selection', 'Without Kit');
+
+        if (error) throw error;
+
+        if (count >= 30) {
+            const modeSelect = document.getElementById('registrationMode');
+            if (modeSelect) {
+                const noKitOption = Array.from(modeSelect.options).find(opt => opt.value === 'Without Kit');
+                if (noKitOption) {
+                    noKitOption.disabled = true;
+                    noKitOption.text = 'Without Hardware Kit (₹500) - SOLD OUT';
+                    // Force the selection to the premium option so they can't submit an invalid form
+                    modeSelect.value = 'With Kit';
+                }
+            }
+        }
+    } catch (err) {
+        console.error("Failed to check seat capacity:", err);
+    }
+});
+
 

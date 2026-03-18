@@ -91,6 +91,22 @@ paymentForm.addEventListener('submit', async (e) => {
     confirmText.style.opacity = '0.7';
 
     try {
+        // 1.5. Capacity Verification Post-Check (Anti-Cheat)
+        if (registrationData.kit_selection === 'Without Kit') {
+            const { count, error: countError } = await supabase
+                .from('participant')
+                .select('*', { count: 'exact', head: true })
+                .eq('kit_selection', 'Without Kit');
+            
+            if (countError) throw countError;
+
+            if (count >= 30) {
+                showToast('Sorry! The Without Kit slots just sold out while you were waiting. Please restart registration.', 'error');
+                resetButton();
+                return;
+            }
+        }
+
         // 2. Duplicate Transaction Check
         const { data: existingTxns, error: txnError } = await supabase
             .from('participant')
