@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DART 2.0 | Welcome</title>
     <link rel="stylesheet" href="./index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- External Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -171,84 +172,236 @@
         }
 
         /* ID Card Specific Styles */
-        .id-card-wrapper {
-            background: linear-gradient(135deg, #1A1A24 0%, #0A0A0E 100%);
-            border: 1px solid var(--accent-primary);
-            border-radius: 12px;
-            width: 320px;
-            margin: 0 auto 24px auto;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(74, 0, 224, 0.2);
+        /* --- STITCH KINETIC BRUTALISM ID CARD STYLES --- */
+        #digital-id-card.stitch-card-v2 {
             position: relative;
-        }
-
-        .id-card-header {
-            background: var(--accent-primary);
+            width: 380px;
+            height: 570px;
+            background-color: #0c0e14;
+            box-shadow: 0 0 60px rgba(229,0,0,0.08);
+            overflow: hidden;
+            margin: 0 auto 30px auto;
+            font-family: 'Space Grotesk', sans-serif;
             color: white;
-            padding: 16px;
-            text-align: center;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 800;
-            letter-spacing: 2px;
-            font-size: 1.2rem;
+            border-radius: 4px;
         }
 
-        .id-card-body {
-            padding: 24px;
+        /* Background Pattern Inside Card */
+        #digital-id-card.stitch-card-v2::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(#e50000 0.5px, transparent 0.5px);
+            background-size: 12px 12px;
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Background Design Elements */
+        .stitch-card-v2 .bg-accent {
+            position: absolute;
+            z-index: 10;
+        }
+        .stitch-card-v2 .bg-accent-sub {
+            position: absolute;
+            z-index: 0;
+        }
+
+        /* Scaled up corner polygons to match original proportions */
+        /* Top Left */
+        .stitch-card-v2 .bg-tl-1 { top: 0; left: 0; width: 144px; height: 144px; background-color: #e50000; transform: translate(-72px, -72px) rotate(45deg); }
+        .stitch-card-v2 .bg-tl-2 { top: 0; left: 0; width: 112px; height: 112px; background-color: #8e120a; transform: translate(-56px, -56px) rotate(45deg); }
+
+        /* Top Right */
+        .stitch-card-v2 .bg-tr-1 { top: 0; right: 0; width: 144px; height: 144px; background-color: #e50000; transform: translate(72px, -72px) rotate(45deg); }
+
+        /* Bottom Left */
+        .stitch-card-v2 .bg-bl-1 { bottom: 0; left: 0; width: 180px; height: 56px; background-color: #8e120a; transform: translateX(-16px) skewX(-12deg); z-index: 10; }
+        .stitch-card-v2 .bg-bl-2 { bottom: 0; left: 0; width: 144px; height: 144px; background-color: #e50000; transform: translate(-72px, 88px) rotate(45deg); z-index: 0; }
+
+        /* Bottom Right */
+        .stitch-card-v2 .bg-br-1 { bottom: 0; right: 0; width: 144px; height: 144px; background-color: #e50000; transform: translate(72px, 72px) rotate(45deg); }
+        .stitch-card-v2 .bg-br-2 { bottom: 0; right: 0; width: 112px; height: 112px; background-color: #8e120a; transform: translate(56px, 56px) rotate(45deg); z-index: 0; }
+
+        /* Status Ribbon */
+        .stitch-card-v2 .status-ribbon {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 144px;
+            background-color: #e50000;
+            z-index: 15;
+            box-shadow: 2px 0 15px rgba(229,0,0,0.5);
+        }
+
+        /* Card Content Overlay */
+        .stitch-card-v2 .content-overlay {
+            position: relative;
+            z-index: 20;
             display: flex;
             flex-direction: column;
             align-items: center;
+            height: 100%;
+            padding: 48px 24px 0 24px;
+            text-align: center;
+            box-sizing: border-box;
         }
 
-        .student-photo-container {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 3px solid var(--accent-secondary);
+        /* Profile Section */
+        .stitch-card-v2 .profile-wrapper {
+            position: relative;
+            margin-top: 24px;
+            width: 150px;
+            height: 150px;
+        }
+        .stitch-card-v2 .profile-glow {
+            position: absolute;
+            inset: 0;
+            background-color: #e50000;
+            border-radius: 9999px;
+            filter: blur(28px);
+            opacity: 0.35;
+            transform: scale(1.3);
+        }
+        .stitch-card-v2 .profile-ring {
+            width: 100%;
+            height: 100%;
+            border-radius: 9999px;
+            border: 8px solid #e50000;
             overflow: hidden;
-            margin-bottom: 20px;
-            background: var(--bg-secondary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background-color: #282a30;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
-
-        .student-photo-container img {
+        .stitch-card-v2 .profile-ring img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .id-detail-group {
+        /* Identity Section */
+        .stitch-card-v2 .identity-section {
+            margin-top: 32px;
             text-align: center;
-            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
             width: 100%;
         }
-
-        .id-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
+        .stitch-card-v2 .name {
+            font-size: 32px;
+            font-weight: 900;
+            color: white;
+            line-height: 1;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
+            letter-spacing: -0.05em;
+            margin: 0;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
-
-        .id-value {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .id-card-footer {
-            background: rgba(255, 255, 255, 0.03);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 16px;
+        .stitch-card-v2 .college-row {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            font-family: monospace;
-            font-size: 0.85rem;
-            color: var(--accent-secondary);
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+        }
+        .stitch-card-v2 .college-accent {
+            height: 1px;
+            width: 24px;
+            min-width: 24px;
+            background-color: #e50000;
+        }
+        .stitch-card-v2 .college {
+            font-size: 10px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 0.15em;
+            opacity: 0.9;
+            text-transform: uppercase;
+            margin: 0;
+            line-height: 1.5;
+            max-width: 220px;
+            word-wrap: break-word;
+        }
+
+        /* Tactical Data */
+        .stitch-card-v2 .tactical-data {
+            margin-top: 48px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background-color: rgba(95, 63, 58, 0.2);
+            width: 100%;
+            text-align: left;
+        }
+        .stitch-card-v2 .tactical-cell {
+            padding: 16px;
+            background-color: #282a30;
+        }
+        .stitch-card-v2 .tactical-label {
+            font-size: 10px;
+            color: #e50000;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin: 0 0 4px 0;
+        }
+        .stitch-card-v2 .tactical-value {
+            font-size: 20px;
+            color: white;
+            font-weight: 700;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        /* QR Code Section */
+        .stitch-card-v2 .qr-section {
+            margin-top: auto;
+            margin-bottom: 32px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .stitch-card-v2 .qr-wrapper {
+            background-color: white;
+            padding: 12px;
+            box-shadow: 0 0 40px rgba(255,255,255,0.15);
+            width: 120px;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 25; /* above corner shadows */
+        }
+        .stitch-card-v2 .qr-wrapper img, .stitch-card-v2 .qr-wrapper canvas {
+            width: 100%;
+            height: 100%;
+        }
+        .stitch-card-v2 .qr-decor-tr {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 14px;
+            height: 14px;
+            border-top: 2px solid #e50000;
+            border-right: 2px solid #e50000;
+            z-index: 26;
+        }
+        .stitch-card-v2 .qr-decor-bl {
+            position: absolute;
+            bottom: -6px;
+            left: -6px;
+            width: 14px;
+            height: 14px;
+            border-bottom: 2px solid #e50000;
+            border-left: 2px solid #e50000;
+            z-index: 26;
         }
 
         #id-panel {
@@ -348,9 +501,9 @@
                     </svg>
                 </div>
                 <h3 class="card-title">New Participant</h3>
-                <p class="card-desc">Have not registered yet? Secure your seat and create your digital ID card now.</p>
-                <a href="./pages/dart-registration.html" class="btn btn-primary"
-                    style="text-align: center; text-decoration: none;">Register Now</a>
+                <p class="card-desc">Registration for the DART 2.0 Workshop is now officially closed. All seats have been filled.</p>
+                <button class="btn btn-outline" disabled
+                    style="text-align: center; text-decoration: none; cursor: not-allowed; opacity: 0.6; width: 100%;">Registration Closed</button>
             </div>
 
             <!-- Existing User Login -->
@@ -383,94 +536,115 @@
         </div>
 
         <!-- ID Card Display Panel (Hidden by default) -->
-        <div id="id-panel" class="glass-panel">
-            <h2 style="margin-bottom: 8px;">Welcome Back!</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 32px;">Here is your official DART 2.0 ID Card.</p>
-
-            <!-- Digital ID Card Container -->
-            <div id="digital-id-card" class="id-card-wrapper">
-                <div class="id-card-header">
-                    DART 2.0 WORKSHOP
-                </div>
-
-                <div class="id-card-body">
-                    <div class="student-photo-container">
-                        <img id="id-card-photo" src="" alt="Student Photo">
-                    </div>
-
-                    <div class="id-detail-group">
-                        <div class="id-value" id="id-card-name"
-                            style="font-size: 1.4rem; font-family: 'Outfit'; color: var(--accent-secondary);">Name</div>
-                    </div>
-
-                    <div class="id-detail-group" style="margin-bottom: 8px;">
-                        <div class="id-label">College</div>
-                        <div class="id-value" id="id-card-college" style="font-size: 0.95rem;">College</div>
-                    </div>
-
-                    <div
-                        style="display: grid; grid-template-columns: 1fr 1fr; width: 100%; gap: 12px; margin-bottom: 8px;">
-                        <div class="id-detail-group" style="margin-bottom: 0;">
-                            <div class="id-label">Department</div>
-                            <div class="id-value" id="id-card-branch" style="font-size: 0.9rem;">Branch</div>
-                        </div>
-                        <div class="id-detail-group" style="margin-bottom: 0;">
-                            <div class="id-label">Year</div>
-                            <div class="id-value" id="id-card-year" style="font-size: 0.9rem;">Year</div>
-                        </div>
-                    </div>
-
-                    <div class="id-detail-group"
-                        style="display: flex; justify-content: space-between; margin-top: 12px; align-items: center;">
-                        <div style="text-align: left;">
-                            <div class="id-label">Roll No.</div>
-                            <div class="id-value" id="id-card-roll" style="font-size: 0.9rem;">Roll</div>
-                        </div>
-                        <div id="qrcode-container" style="background: white; padding: 4px; border-radius: 4px;">
-                            <!-- QR Code injected here -->
-                        </div>
-                    </div>
-                </div>
-
-                <div class="id-card-footer">
-                    <span id="display-participant-id">DART2026-XXXX</span>
-                    <span id="display-payment-status" style="color: var(--success);">ATTENDEE</span>
-                </div>
+        <div id="id-panel" class="glass-panel" style="padding: 0; overflow: hidden; max-width: 420px; margin: 40px auto 0 auto; background: #111319; position: relative; border-radius: 12px; border: 1px solid #333; box-shadow: 0 0 40px rgba(0,0,0,0.5);">
+            <div style="padding: 24px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); z-index: 10; position: relative;">
+                <h2 style="margin-bottom: 8px;">Welcome Back!</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 0;">Here is your official DART 2.0 ID Card.</p>
             </div>
 
-            <button class="btn btn-primary" id="download-qr-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="7 10 12 15 17 10"></polyline>
-                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                Download Official ID
-            </button>
+            <!-- Mobile UI Mock Shell -->
+            <div id="mock-app-ui" style="position: relative; background: #191b21;">
+                
+                <!-- Top Nav -->
+                <header style="background: #111319; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; height: 64px; border-bottom: 2px solid #e50000; box-shadow: 0 0 20px rgba(229,0,0,0.15); z-index: 50; position: relative;">
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="cursor: pointer;"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                        <h1 style="font-family: 'Space Grotesk', sans-serif; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 900; font-size: 1.25rem; color: white; margin: 0;">EVENT PASS</h1>
+                    </div>
+                    <div>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e50000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="cursor: pointer;"><path d="M4 4h6v6H4z"></path><path d="M14 4h6v6h-6z"></path><path d="M4 14h6v6H4z"></path><path d="M14 14h6v6h-6z"></path></svg>
+                    </div>
+                </header>
 
-            <div class="qr-instructions"
-                style="max-width: 500px; margin: 24px auto; text-align: left; padding: 20px; background: rgba(255, 255, 255, 0.05); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
-                <p style="margin-bottom: 12px; font-weight: 700; color: var(--accent-secondary);">Important
-                    Instructions:</p>
-                <ul style="list-style-type: none; padding: 0;">
-                    <li style="margin-bottom: 8px; display: flex; gap: 10px;">
-                        <span>•</span>
-                        <span>After completing your registration, please wait until your payment is verified by the
-                            organizing team.</span>
-                    </li>
-                    <li style="margin-bottom: 8px; display: flex; gap: 10px;">
-                        <span>•</span>
-                        <span>Once your payment is successfully verified, you will receive your unique QR code.</span>
-                    </li>
-                    <li style="margin-bottom: 8px; display: flex; gap: 10px;">
-                        <span>•</span>
-                        <span>This QR code is mandatory for entry to the workshop venue.</span>
-                    </li>
-                </ul>
+                <main style="padding: 48px 24px 80px 24px; display: flex; flex-direction: column; align-items: center; position: relative;">
+                    <!-- Background Patterns -->
+                    <div style="position: absolute; inset: 0; background-image: radial-gradient(#e50000 0.5px, transparent 0.5px); background-size: 12px 12px; opacity: 0.05; pointer-events: none;"></div>
+                    <div style="position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(229, 0, 0, 0.1) 20px); opacity: 0.2; pointer-events: none;"></div>
+                    
+                    <!-- Digital ID Card Container (Stitch Template Kinetic V2) -->
+                    <div id="digital-id-card" class="stitch-card-v2" style="margin-bottom: 0;">
+                        <!-- Corner Accents -->
+                        <div class="bg-accent bg-tl-1"></div>
+                        <div class="bg-accent-sub bg-tl-2"></div>
+                        <div class="bg-accent bg-tr-1"></div>
+                        <div class="bg-accent bg-bl-1"></div>
+                        <div class="bg-accent-sub bg-bl-2"></div>
+                        <div class="bg-accent bg-br-1"></div>
+                        <div class="bg-accent-sub bg-br-2"></div>
+                        
+                        <!-- Card Content Overlay -->
+                        <div class="content-overlay">
+                            <div class="status-ribbon"></div>
+                            
+                            <!-- Profile Section -->
+                            <div class="profile-wrapper">
+                                <div class="profile-glow"></div>
+                                <div class="profile-ring">
+                                    <img id="id-card-photo" src="" alt="Student Photo">
+                                </div>
+                            </div>
+                            
+                            <!-- Identity Section -->
+                            <div class="identity-section">
+                                <h2 class="name" id="id-card-name">NAME</h2>
+                                <div class="college-row">
+                                    <div class="college-accent"></div>
+                                    <p class="college">
+                                        <span id="id-card-college">COLLEGE</span><br><span style="opacity:0.5;">|</span> <span id="id-card-branch">BRANCH</span> <span style="opacity:0.5;">|</span> <span id="id-card-year">YR</span> <span style="opacity:0.5;">|</span>
+                                    </p>
+                                    <div class="college-accent"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Tactical Data -->
+                            <div class="tactical-data">
+                                <div class="tactical-cell">
+                                    <p class="tactical-label">ID NUMBER</p>
+                                    <p class="tactical-value" id="display-participant-id">DARTXXXX-XX</p>
+                                </div>
+                                <div class="tactical-cell">
+                                    <p class="tactical-label">ROLL NO</p>
+                                    <p class="tactical-value" id="id-card-roll">ROLL</p>
+                                </div>
+                            </div>
+                            
+                            <!-- QR Code Section -->
+                            <div class="qr-section">
+                                <div class="qr-wrapper" id="qrcode-container">
+                                    <!-- QR Code injected via JS -->
+                                </div>
+                                <div class="qr-decor-tr"></div>
+                                <div class="qr-decor-bl"></div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+
             </div>
-            <br>
-            <button class="btn btn-outline" onclick="window.location.reload();"
-                style="margin-top: 16px; border: none;">Close</button>
+
+            <div style="padding: 24px; background: #111319; border-top: 1px solid rgba(255,255,255,0.05); z-index: 10; position: relative;">
+                <button class="btn btn-primary" id="download-qr-btn" style="width: 100%;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download Official ID
+                </button>
+                <div class="qr-instructions"
+                    style="margin: 16px 0; text-align: left; padding: 16px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.85rem;">
+                    <p style="margin-bottom: 8px; font-weight: 700; color: var(--accent-secondary);">Important Instructions:</p>
+                    <ul style="list-style-type: none; padding: 0;">
+                        <li style="margin-bottom: 6px; display: flex; gap: 8px;">
+                            <span>•</span>
+                            <span>This QR code is mandatory for entry to the workshop venue.</span>
+                        </li>
+                    </ul>
+                </div>
+                <button class="btn btn-outline" onclick="window.location.reload();" style="width: 100%; border: none;">Close</button>
+            </div>
         </div>
 
         <div class="stats-sidebar animate-fade-in" style="animation-delay: 0.2s;">

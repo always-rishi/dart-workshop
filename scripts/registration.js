@@ -47,6 +47,10 @@ async function isEmailRegistered(email) {
 // Setup Form Submission Hook
 registrationForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    
+    // REGISTRATION CLOSED GUARD
+    showToast('Registration is now closed. No new registrations are being accepted.', 'error');
+    return;
 
     // UI Loading State
     submitBtn.disabled = true;
